@@ -4,34 +4,32 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Stream;
+
 
 public class Main {
     public static void main(String args[]){
-         Path path = Paths.get("C:/Projetos/BackEnd_LetsCode/LC.MaterialProjetoJava/male_oscar.csv");
-         readLine(path);
+        Path path = Paths.get("C:/Projetos/BackEnd_LetsCode/LC.MaterialProjetoJava/male_oscar.csv");
+        List<Ator> listaCompleta = new ArrayList<>();
+        listaCompleta = readLine(path);
     }
 
-    public static void readLine(Path file){
-        try(Stream<String> stream = Files.lines(file, StandardCharsets.UTF_8))
-        {
-            List<Ator> listaAtores = new ArrayList<Ator>();
-                stream.skip(1).forEach(line -> {
+    public static List<Ator> readLine(Path path){
+        List<Ator> listaAtores = new ArrayList<>();
+        try{
+                List<String> lines = Files.readAllLines(path, StandardCharsets.UTF_8);
+                lines.stream().skip(1).forEach(line -> {
                     String[] lineTeste = line.split(";");
-                    Arrays.toString(lineTeste);
-                    Ator ator = new Ator();
-                    ator.setIndex(lineTeste[0]);
-                    ator.setYear(lineTeste[1]);
-                    ator.setAge(Integer.parseInt(lineTeste[2]));
-                    ator.setName(lineTeste[3]);
-                    ator.setMovie(lineTeste[4]);
-                    listaAtores.add(ator);
+                    listaAtores.add(new Ator(
+                        lineTeste[0],
+                        lineTeste[1],
+                        Integer.parseInt(lineTeste[2]),
+                        lineTeste[3],
+                        lineTeste[4]));
                 });
-            System.out.println("FIM");
         } catch (IOException ex) {
             ex.printStackTrace();
         }
+        return listaAtores;
     }
 }
