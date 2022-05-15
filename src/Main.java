@@ -20,20 +20,49 @@ public class Main {
         List<Actor> listFemale = new ArrayList<>();
         listFemale = readData(pathFemale);
 
-        //YOUNGEST ACTOR
-        String youngerActor = getYougerActor(listMale);
-        System.out.println("Youngest dto.Actor Awarded: " + youngerActor);
 
-        //MOST AWARDED ACTRESS
-        String mostAwardedActress = getMostAwarded(listFemale);
-        System.out.println("Most Awarded Actress: " + mostAwardedActress);
+        List<Actor> allActors = new ArrayList();
 
-        //MOST AWARDED ACTRESS BETWEEN 20 AND 30 YEARS
-        List<Actor> actressesBetweenAge = getActressesBetweenAge(listFemale, 20, 30);
-        Long qtdAwarded = getQtdAwarded(actressesBetweenAge);
-        List<Map.Entry<String, Long>> actressesFinal = getMostAwardedFinal(actressesBetweenAge,qtdAwarded);
-        System.out.println("Actress who was awarded the most awards aged between 20 and 30:");
-        actressesFinal.forEach(a -> System.out.print(a.getKey() + ": " + a.getValue() + " vezes "));
+        allActors.addAll(listMale);
+        allActors.addAll(listFemale);
+
+
+//        //YOUNGEST ACTOR
+//        String youngerActor = getYougerActor(listMale);
+//        System.out.println("Youngest Actor Awarded: " + youngerActor);
+//
+//        //MOST AWARDED ACTRESS
+//        String mostAwardedActress = getMostAwarded(listFemale);
+//        System.out.println("Most Awarded Actress: " + mostAwardedActress);
+//
+//        //MOST AWARDED ACTRESS BETWEEN 20 AND 30 YEARS
+//        List<Actor> actressesBetweenAge = getActressesBetweenAge(listFemale, 20, 30);
+//        Long qtdAwarded = getQtdAwarded(actressesBetweenAge);
+//        List<Map.Entry<String, Long>> actressesFinal = getMostAwardedFinal(actressesBetweenAge,qtdAwarded);
+//        System.out.print("Actress who was awarded the most awards aged between 20 and 30:");
+//        actressesFinal.forEach(a -> System.out.print("\n" + a.getKey() + ": " + a.getValue() + " times "));
+
+//        //ACTORS THAT HAVE BEEN AWARDED MORE THAN ONE TIME
+//        List<Map.Entry<String, Long>> allActorsAwards = getAllActorsAwards(allActors);
+//        System.out.print("Actors who have been awarded more than one time:");
+//        allActorsAwards.forEach(a -> System.out.print("\n" + a.getKey() + ": " + a.getValue() + " times "));
+
+        List<Actor> actorInfo = getActorInfo(allActors, "Fredric March");
+        System.out.println("Number of times won: " + actorInfo.size());
+        actorInfo.forEach(a -> System.out.println("Year:" + a.getYear() + " Idade:" + a.getAge() + " Movie:" + a.getMovie()));
+    }
+
+    public static List<Actor> getActorInfo(List<Actor> actors, String name){
+        return actors.stream()
+                .filter(a -> a.getName().trim().toUpperCase().equals(name.trim().toUpperCase()))
+                .toList();
+    }
+    public static List<Map.Entry<String, Long>> getAllActorsAwards(List<Actor> actors){
+        return actors.stream()
+                .collect(Collectors.groupingBy(Actor::getName, Collectors.counting()))
+                .entrySet()
+                .stream()
+                .filter(a -> a.getValue() > 1).toList();
     }
     public static String getMostAwarded(List<Actor> actresses){
         return actresses.stream()
