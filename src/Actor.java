@@ -1,12 +1,12 @@
-public class Ator {
+public class Actor {
     private String index;
     private String year;
     private int age;
     private String name;
     private String movie;
 
-    public Ator(){}
-    public Ator(String index, String year, int age, String name, String movie){
+    public Actor(){}
+    public Actor(String index, String year, int age, String name, String movie){
         this.index = index;
         this.year = year;
         this.age = age;

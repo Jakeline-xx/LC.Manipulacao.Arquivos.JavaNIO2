@@ -5,11 +5,9 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 public class Main {
@@ -17,53 +15,74 @@ public class Main {
         Path pathMale = Paths.get("C:/Projetos/BackEnd_LetsCode/LC.MaterialProjetoJava/male_oscar.csv");
         Path pathFemale = Paths.get("C:/Projetos/BackEnd_LetsCode/LC.MaterialProjetoJava/female_oscar.csv");
 
-        List<Ator> listMale = new ArrayList<>();
+        List<Actor> listMale = new ArrayList<>();
         listMale = readData(pathMale);
 
-        List<Ator> listFemale = new ArrayList<>();
+        List<Actor> listFemale = new ArrayList<>();
         listFemale = readData(pathFemale);
 
-        //ATOR MAIS JOVEM
+        //YOUNGEST ACTOR
         String youngerActor = getYougerActor(listMale);
-        System.out.println("Ator mais jovem premiado: " + youngerActor);
+        System.out.println("Youngest Actor Awarded: " + youngerActor);
 
-        //ATRIZ MAIS PREMIADA
-        String actressMostAwarded = getMostAwarded(listFemale);
-        System.out.println("Atriz que mais vezes foi premiada: " + actressMostAwarded);
+        //MOST AWARDED ACTRESS
+        String mostAwardedActress = getMostAwarded(listFemale);
+        System.out.println("Most Awarded Actress: " + mostAwardedActress);
+
+        //MOST AWARDED ACTRESS BETWEEN 20 AND 30 YEARS
+        List<Actor> actressesBetweenAge = getActressesBetweenAge(listFemale, 20, 30);
+        Long qtdAwarded = getQtdAwarded(actressesBetweenAge);
+        List<Map.Entry<String, Long>> actressesFinal = getMostAwardedFinal(actressesBetweenAge,qtdAwarded);
+        System.out.println("Actress who was awarded the most awards aged between 20 and 30:");
+        actressesFinal.forEach(a -> System.out.print(a.getKey() + ": " + a.getValue() + " vezes "));
     }
 
-    public static String getMostAwarded(List<Ator> actresses){
+    public static List<Actor> getActressesBetweenAge (List<Actor> actresses, int ageStart, int ageFinal){
+        return actresses.stream().filter(a -> a.getAge() >= ageStart && a.getAge() <= ageFinal).toList();
+    }
+    public static String getMostAwarded(List<Actor> actresses){
+        return actresses.stream()
+                .collect(Collectors.groupingBy(Actor::getName, Collectors.counting()))
+                .entrySet()
+                .stream()
+                .max((a1, a2) -> a1.getValue().intValue() - a2.getValue().intValue()).get().getKey();
+    }
+    public static Long getQtdAwarded(List<Actor> actresses){
          return actresses.stream()
-                .collect(Collectors.groupingBy(Ator::getName, Collectors.counting()))
+                .collect(Collectors.groupingBy(Actor::getName, Collectors.counting()))
                  .entrySet()
                  .stream()
-                 .max((Map.Entry<String, Long> e1, Map.Entry<String, Long> e2) -> e1.getValue()
-                         .compareTo(e2.getValue())).get().getKey();
+                 .max((a1, a2) -> a1.getValue().intValue() - a2.getValue().intValue()).get().getValue();
     }
-
-    public static String getYougerActor(List<Ator> actors){
+    public static List<Map.Entry<String, Long>> getMostAwardedFinal(List<Actor> actresses, Long qtdAwarded){
+        return actresses.stream()
+                .collect(Collectors.groupingBy(Actor::getName, Collectors.counting()))
+                .entrySet()
+                .stream()
+                .filter(a -> a.getValue() == qtdAwarded).toList();
+    }
+    public static String getYougerActor(List<Actor> actors){
         return actors.stream()
-                .min(Comparator.comparingInt(Ator::getAge))
+                .min(Comparator.comparingInt(Actor::getAge))
                 .get()
                 .getName();
     }
-
-    public static List<Ator> readData(Path path){
-        List<Ator> listaAtores = new ArrayList<>();
+    public static List<Actor> readData(Path path){
+        List<Actor> listActors = new ArrayList<>();
         try{
                 List<String> lines = Files.readAllLines(path, StandardCharsets.UTF_8);
                 lines.stream().skip(1).forEach(line -> {
-                    String[] lineTeste = line.split(";");
-                    listaAtores.add(new Ator(
-                        lineTeste[0],
-                        lineTeste[1],
-                        Integer.parseInt(lineTeste[2]),
-                        lineTeste[3],
-                        lineTeste[4]));
+                    String[] lineTest = line.split(";");
+                    listActors.add(new Actor(
+                        lineTest[0],
+                        lineTest[1],
+                        Integer.parseInt(lineTest[2]),
+                        lineTest[3],
+                        lineTest[4]));
                 });
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-        return listaAtores;
+        return listActors;
     }
 }
