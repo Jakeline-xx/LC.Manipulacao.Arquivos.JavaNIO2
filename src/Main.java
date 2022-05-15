@@ -1,4 +1,4 @@
-import jdk.swing.interop.SwingInterOpUtils;
+import dto.Actor;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -7,13 +7,12 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 
 public class Main {
     public static void main(String args[]){
-        Path pathMale = Paths.get("C:/Projetos/BackEnd_LetsCode/LC.MaterialProjetoJava/male_oscar.csv");
-        Path pathFemale = Paths.get("C:/Projetos/BackEnd_LetsCode/LC.MaterialProjetoJava/female_oscar.csv");
+        Path pathMale = Paths.get("C:/Projetos/BackEnd_LetsCode/ArquivosJavaNIO2/LC.Manipulacao.Arquivos.JavaNIO2/src/infra/repository/male_oscar.csv");
+        Path pathFemale = Paths.get("C:/Projetos/BackEnd_LetsCode/ArquivosJavaNIO2/LC.Manipulacao.Arquivos.JavaNIO2/src/infra/repository/female_oscar.csv");
 
         List<Actor> listMale = new ArrayList<>();
         listMale = readData(pathMale);
@@ -23,7 +22,7 @@ public class Main {
 
         //YOUNGEST ACTOR
         String youngerActor = getYougerActor(listMale);
-        System.out.println("Youngest Actor Awarded: " + youngerActor);
+        System.out.println("Youngest dto.Actor Awarded: " + youngerActor);
 
         //MOST AWARDED ACTRESS
         String mostAwardedActress = getMostAwarded(listFemale);
@@ -36,16 +35,15 @@ public class Main {
         System.out.println("Actress who was awarded the most awards aged between 20 and 30:");
         actressesFinal.forEach(a -> System.out.print(a.getKey() + ": " + a.getValue() + " vezes "));
     }
-
-    public static List<Actor> getActressesBetweenAge (List<Actor> actresses, int ageStart, int ageFinal){
-        return actresses.stream().filter(a -> a.getAge() >= ageStart && a.getAge() <= ageFinal).toList();
-    }
     public static String getMostAwarded(List<Actor> actresses){
         return actresses.stream()
                 .collect(Collectors.groupingBy(Actor::getName, Collectors.counting()))
                 .entrySet()
                 .stream()
                 .max((a1, a2) -> a1.getValue().intValue() - a2.getValue().intValue()).get().getKey();
+    }
+    public static List<Actor> getActressesBetweenAge (List<Actor> actresses, int ageStart, int ageFinal){
+        return actresses.stream().filter(a -> a.getAge() >= ageStart && a.getAge() <= ageFinal).toList();
     }
     public static Long getQtdAwarded(List<Actor> actresses){
          return actresses.stream()

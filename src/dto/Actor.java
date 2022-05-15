@@ -1,3 +1,5 @@
+package dto;
+
 public class Actor {
     private String index;
     private String year;
