@@ -50,6 +50,7 @@ public class Main {
 
         //INFOS ACTORS
         List<Actor> actorInfo = handler.getActorInfo(allActors, "Fredric March");
+        System.out.println("Actor: " + actorInfo.get(0).getName());
         System.out.println("Number of times won: " + actorInfo.size());
         actorInfo.forEach(a -> System.out.println("Year:" + a.getYear() + " Idade:" + a.getAge() + " Movie:" + a.getMovie()));
     }
